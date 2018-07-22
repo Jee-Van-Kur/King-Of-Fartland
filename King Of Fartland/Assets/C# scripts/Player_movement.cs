@@ -12,6 +12,7 @@ public class Player_movement : MonoBehaviour {
     bool jump = false;
     bool punch = false;
     bool fart = false;
+    bool kick = false;
 
 
     void Update () {
@@ -34,15 +35,21 @@ public class Player_movement : MonoBehaviour {
             fart = true;
         }
 
-	}
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            kick = true;
+        }
+
+    }
 
     private void FixedUpdate()
     {
 
         controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
-        controller.Action(horizontalMove, verticalMove, punch, fart);
+        controller.Action(horizontalMove, verticalMove, punch, fart, kick);
         jump = false;
         punch = false;
         fart = false;
+        kick = false;
     }
 }

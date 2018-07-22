@@ -94,7 +94,7 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public void Action(float move, float vert, bool punch, bool fart)
+    public void Action(float move, float vert, bool punch, bool fart, bool kick)
     {
         if (punch)
         {
@@ -103,8 +103,13 @@ public class CharacterController2D : MonoBehaviour
 
         if (vert > 0 && fart)                                           // fart fly combo
         {
-            player_anim.Play("");
+            player_anim.Play("hover");
             m_Rigidbody2D.AddForce(new Vector2(0f, Flyforce));
+        }
+
+        if (kick)
+        {
+            player_anim.Play("kick");
         }
     }
 
