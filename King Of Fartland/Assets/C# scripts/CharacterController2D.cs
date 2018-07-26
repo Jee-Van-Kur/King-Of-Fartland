@@ -3,30 +3,25 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
-	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
-	[SerializeField] private bool m_AirControl = false;							// Whether or not a player can steer while jumping;
-	[SerializeField] private LayerMask m_WhatIsGround;							// A mask determining what is ground to the character
-	[SerializeField] private Transform m_GroundCheck;							// A position marking where to check if the played when crouchingr is grounded.
+	[SerializeField] private float m_JumpForce = 400f;							
+	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	
+	[SerializeField] private bool m_AirControl = false;							
+	[SerializeField] private LayerMask m_WhatIsGround;		
+	[SerializeField] private Transform m_GroundCheck;
 
-	const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
-	private bool m_Grounded;            // Whether or not the player is grounded.
-	const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
+	const float k_GroundedRadius = .2f; 
+	private bool m_Grounded;           
 	private Rigidbody2D m_Rigidbody2D;
-	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
+	private bool m_FacingRight = true;
 	private Vector3 m_Velocity = Vector3.zero;
     private Animator player_anim;
     public float maxFart = 100f;
     private float currenFart;
     private float reloadTime = 1f;
     public float Flyforce = 700f;
+    public GameObject fartTrail;
 
-    void Start()
-    {
-        currenFart = maxFart;
-    }
-
-	public UnityEvent OnLandEvent;
+    public UnityEvent OnLandEvent;
 
 	[System.Serializable]
 	public class BoolEvent : UnityEvent<bool> { }
@@ -44,8 +39,7 @@ public class CharacterController2D : MonoBehaviour
 		bool wasGrounded = m_Grounded;
 		m_Grounded = false;
 
-		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		// This can be done using layers instead but Sample Assets will not overwrite your project settings.
+		
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
@@ -59,7 +53,7 @@ public class CharacterController2D : MonoBehaviour
 	}
 
 
-	public void Move(float move, bool jump)
+	public void Move(float move)
 	{
 
 		//only control the player if grounded or airControl is turned on
@@ -84,25 +78,26 @@ public class CharacterController2D : MonoBehaviour
 				Flip();
 			}
 		}
-		// If the player should jump...
-		if (m_Grounded && jump)
-		{
-			// Add a vertical force to the player.
-			m_Grounded = false;
-			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-            player_anim.Play(""); // play jump animation
-        }
     }
 
-    public void Action(float move, float vert, bool punch, bool fart, bool kick)
+    public void Action(float move, float vert, bool punch, bool fart, bool kick, bool hit)
     {
-        if (punch)
+        if (fart && move != 0f)
+        {
+            fartTrail.SetActive(true);
+            player_anim.Play("Punch");            // Punch
+            m_Rigidbody2D.AddForce(new Vector2(Mathf.Sign(move) * 1000f, 0f));
+            Invoke("Done", 0.5f);
+        }
+
+        else if (punch)
         {
             player_anim.Play("Punch");            // Punch
         }
 
-        if (vert > 0 && fart)                                           // fart fly combo
+        if (vert > 0 && fart && m_Grounded)                                           // fart fly combo
         {
+            m_Grounded = false;
             player_anim.Play("hover");
             m_Rigidbody2D.AddForce(new Vector2(0f, Flyforce));
         }
@@ -110,6 +105,12 @@ public class CharacterController2D : MonoBehaviour
         if (kick)
         {
             player_anim.Play("kick");
+        }
+
+        if (hit)
+        {
+            player_anim.Play("hurt");
+            m_Rigidbody2D.AddForce(new Vector2(Flyforce*move , 0.0f));
         }
     }
 
@@ -124,4 +125,9 @@ public class CharacterController2D : MonoBehaviour
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
+
+    void Done()
+    {
+        fartTrail.SetActive(false);
+    }
 }

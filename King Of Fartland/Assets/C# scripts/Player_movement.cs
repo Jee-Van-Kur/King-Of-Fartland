@@ -13,6 +13,7 @@ public class Player_movement : MonoBehaviour {
     bool punch = false;
     bool fart = false;
     bool kick = false;
+    bool hit = false;
 
 
     void Update () {
@@ -20,19 +21,14 @@ public class Player_movement : MonoBehaviour {
         horizontalMove = Input.GetAxisRaw("Horizontal")*runSpeed;
         verticalMove = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButton("Jump"))
         {
-            jump = true;
+            fart = true;
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
             punch = true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            fart = true;
         }
 
         if(Input.GetKeyDown(KeyCode.C))
@@ -45,11 +41,20 @@ public class Player_movement : MonoBehaviour {
     private void FixedUpdate()
     {
 
-        controller.Move(horizontalMove * Time.fixedDeltaTime, jump);
-        controller.Action(horizontalMove, verticalMove, punch, fart, kick);
+        controller.Move(horizontalMove * Time.fixedDeltaTime);
+        controller.Action(horizontalMove, verticalMove, punch, fart, kick, hit);
         jump = false;
         punch = false;
         fart = false;
         kick = false;
+        hit = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Enemy")
+        {
+            hit = true;
+        }
     }
 }
