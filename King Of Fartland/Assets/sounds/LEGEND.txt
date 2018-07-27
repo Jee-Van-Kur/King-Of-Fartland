@@ -1,0 +1,15 @@
+	function	-	file  
+====================================================
+	fart jump 	- 	COMMON_FART
+	punch		-	PUNCH
+	kick		- 	KICK
+	grunt		-	MALE_GRUNT
+	enemy punch	- 	SMACK
+	button		- 	CARTOON_POINT
+	run		-	RUNNING_FEET
+	button_play	-	SILLY_FART
+	meter empty	-	WONT_START_FART
+	enemy_grunt	
+	highscore
+
+	
