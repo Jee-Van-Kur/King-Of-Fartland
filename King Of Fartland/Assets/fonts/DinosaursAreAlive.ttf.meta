@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 2ecdd88768c6ef147b9cc26926856f09
+timeCreated: 1532714782
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: DinosaursAreAlive
+  fontNames:
+  - DinosaursAreAlive
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

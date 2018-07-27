@@ -22,10 +22,12 @@ public class enemy : MonoBehaviour
     private Rigidbody2D m_enemy;
     private bool hit = false;
     private float dir = 0.0f;
+    private shake ziggy;
+
 
     void Start()
     {
-
+        ziggy = GameObject.FindGameObjectWithTag("screenShake").GetComponent<shake>();
         m_enemy = GetComponent<Rigidbody2D>();
         player_anim = GetComponent<Animator>();
         target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
@@ -58,9 +60,10 @@ public class enemy : MonoBehaviour
 
         if (HIT)
         {
-            m_enemy.AddForce(new Vector2(move*(-2000.0f), 0.0f));
+            m_enemy.AddForce(new Vector2(move*(-2000.0f), 50.0f));
             player_anim.Play("enemy_hurt");
             Invoke("Nohit", 0.2f);
+            m_Grounded = false;
         }
 
     }
@@ -74,11 +77,6 @@ public class enemy : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
-    }
-
-    private void Update()
-    {
-
     }
 
     void FixedUpdate()
@@ -102,15 +100,26 @@ public class enemy : MonoBehaviour
         {
             player_anim.Play("enemy_punch");                                  // punch
         }
-        else
+        else if (m_Grounded)
             Move(dir * speed * Time.fixedDeltaTime, hit);
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "PlayerA")
         {
+            ziggy.camShake();
             hit = true;
+            Move(dir, hit);
+        }
+
+        if (col.gameObject.tag == "Respawn")
+        {
+            player_anim.Play("enemy_hurt");
+            if (EnemySpwaner.instance.SpwanRate > 0.5)
+                EnemySpwaner.instance.SpwanRate -= 0.5f;
+            Scoring.instace.CurrentScore += 10;
+            Scoring.instace.setCount();
             Move(dir, hit);
         }
     }

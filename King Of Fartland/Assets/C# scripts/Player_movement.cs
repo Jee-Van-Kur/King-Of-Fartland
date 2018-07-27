@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Player_movement : MonoBehaviour {
@@ -9,14 +10,22 @@ public class Player_movement : MonoBehaviour {
 
     float horizontalMove = 0f;
     float verticalMove = 0f;
-    bool jump = false;
     bool punch = false;
     bool fart = false;
     bool kick = false;
     bool hit = false;
+    public Text fartText;
+    public Menu menu;
 
-
+    private void Start()
+    {
+        
+    }
     void Update () {
+
+        fartText.text = "Fart: " + controller.currenFart.ToString() + "psi"; 
+        if(controller.currenFart <= 0f)
+            fartText.text = "Reloading";
 
         horizontalMove = Input.GetAxisRaw("Horizontal")*runSpeed;
         verticalMove = Input.GetAxisRaw("Vertical");
@@ -26,12 +35,12 @@ public class Player_movement : MonoBehaviour {
             fart = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             punch = true;
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
+        if(Input.GetKeyDown(KeyCode.X))
         {
             kick = true;
         }
@@ -43,7 +52,6 @@ public class Player_movement : MonoBehaviour {
 
         controller.Move(horizontalMove * Time.fixedDeltaTime);
         controller.Action(horizontalMove, verticalMove, punch, fart, kick, hit);
-        jump = false;
         punch = false;
         fart = false;
         kick = false;
@@ -56,5 +64,11 @@ public class Player_movement : MonoBehaviour {
         {
             hit = true;
         }
+
+        if (col.gameObject.tag == "Respawn")
+        {
+            menu.Pause();
+        }
     }
+
 }
