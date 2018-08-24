@@ -3,10 +3,10 @@ An unity 2D fun survival game.
 
 Current build for windows.
 
-Things to be done:
-1. Sprite Sheets
-2. Physics
-3. Game Mech
-4. UI
-5. SFX
+Find the game at 
+## https://jee-van-kur.itch.io/king-of-fartland
+
+
+
+This repo contains the resources used in the game.
 
